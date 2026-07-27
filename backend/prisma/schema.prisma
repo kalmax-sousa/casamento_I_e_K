@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// ÁREA ADMINISTRATIVA
+// ==========================================
+model AdminUser {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String // Hash da senha (ex: bcrypt)
+  createdAt DateTime @default(now())
+}
+
+// ==========================================
+// CONFIRMAÇÃO DE PRESENÇA (RSVP)
+// ==========================================
+model Family {
+  id        String   @id @default(uuid())
+  name      String // Ex: "Família Silva" ou "João e Maria"
+  guests    Guest[]
+  createdAt DateTime @default(now())
+}
+
+model Guest {
+  id          String  @id @default(uuid())
+  name        String
+  isConfirmed Boolean @default(false)
+
+  familyId String
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  purchases Purchase[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==========================================
+// LISTA DE PRESENTES (Estilo E-commerce)
+// ==========================================
+model Gift {
+  id          String  @id @default(uuid())
+  name        String // Nome do presente (ex: "Jogo de Panelas")
+  description String?
+  photoUrl    String? // Foto do presente
+  price       Float // Valor unitário (Obrigatório para o Stripe)
+
+  // Controle de estoque simples
+  totalQuantity     Int @default(1) // Quantidade que vocês querem (ex: 4 toalhas)
+  purchasedQuantity Int @default(0) // Quantidade já comprada
+
+  purchases Purchase[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Purchase {
+  id String @id @default(uuid())
+
+  giftId String
+  gift   Gift   @relation(fields: [giftId], references: [id])
+
+  buyerName String // Nome de quem comprou (vai vir do Stripe)
+  guestId   String? // Opcional: Se o convidado se identificar antes de comprar
+  guest     Guest?  @relation(fields: [guestId], references: [id])
+
+  quantityBought Int   @default(1)
+  amountPaid     Float // Valor total pago na transação
+
+  status        String  @default("PENDING") // PENDING, PAID, FAILED
+  stripeSession String? // ID do checkout session do Stripe para o Webhook
+
+  createdAt DateTime @default(now())
+}
+
+// ==========================================
+// DESAFIO DE FOTOS
+// ==========================================
+model Photo {
+  id         String   @id @default(uuid())
+  url        String // URL do S3, Cloudinary, etc.
+  guestName  String? // Opcional: quem fez o upload
+  isApproved Boolean  @default(true) // Caso queira moderar as fotos depois
+  createdAt  DateTime @default(now())
+}
