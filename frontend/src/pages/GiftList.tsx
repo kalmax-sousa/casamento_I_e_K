@@ -26,7 +26,7 @@ function GiftCard({ gift, onGiftUpdated }: { gift: Gift, onGiftUpdated: () => vo
     if (!buyerName.trim()) return alert('Por favor, informe seu nome.');
     setIsProcessing(true);
     try {
-      const response = await fetch('http://localhost:3333/api/gifts/checkout', {
+      const response = await fetch('https://casamento-i-e-k.onrender.com/api/gifts/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ giftId: gift.id, quantityToBuy: quantity, buyerName }),
@@ -46,7 +46,7 @@ function GiftCard({ gift, onGiftUpdated }: { gift: Gift, onGiftUpdated: () => vo
     if (!buyerName.trim()) return alert('Por favor, informe seu nome.');
     setIsProcessing(true);
     try {
-      const response = await fetch('http://localhost:3333/api/gifts/pledge', {
+      const response = await fetch('https://casamento-i-e-k.onrender.com/api/gifts/pledge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ giftId: gift.id, quantityToBuy: quantity, buyerName }),
@@ -157,7 +157,7 @@ export function GiftList() {
 
   // 1. Criamos uma função separada para buscar os presentes
   const fetchGifts = () => {
-    fetch('http://localhost:3333/api/gifts')
+    fetch('https://casamento-i-e-k.onrender.com/api/gifts')
       .then(res => res.json())
       .then(data => {
         setGifts(data);

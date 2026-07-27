@@ -22,7 +22,7 @@ export function AdminGifts() {
   // Carrega a lista de presentes atual
   const fetchGifts = async () => {
     try {
-      const response = await fetch('http://localhost:3333/api/gifts');
+      const response = await fetch('https://casamento-i-e-k.onrender.com/api/gifts');
       const data = await response.json();
       setGifts(data);
     } catch (error) {
@@ -43,7 +43,7 @@ export function AdminGifts() {
     const token = localStorage.getItem('adminToken'); 
 
     try {
-      const response = await fetch('http://localhost:3333/api/admin/gifts', {
+      const response = await fetch('https://casamento-i-e-k.onrender.com/api/admin/gifts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
