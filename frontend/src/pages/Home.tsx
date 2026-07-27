@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import fotoCasal from '../assets/ZVE00227.jpg';
-import nome from '../assets/Group 113.svg';
 
 export function Home() {
   // Configuração do Contador (Ajuste para a data real)
