@@ -3,6 +3,7 @@ import { prisma } from '../config/prisma.js';
 export class AdminGuestService {
   // Cria a família já embutindo os convidados nela
   async createFamilyWithGuests(familyName: string, guestNames: string[]) {
+    const family = await prisma.family.findUnique({ where: { name: familyName } });
     return await prisma.family.create({
       data: {
         name: familyName,
@@ -37,6 +38,16 @@ export class AdminGuestService {
   }
 
   async deleteGuest(guestId: string) {
+    const guest = await prisma.guest.findUnique({ where: { id: guestId } });
+    if (!guest) {
+      throw new Error('Convidado não encontrado');
+    }
+
+    const family = await prisma.family.findUnique({ where: { id: guest.familyId }, include: { guests: true } });
+
+    if (family?.guests.length === 1) {
+      return await prisma.family.delete({ where: { id: family.id }});
+    }
     return await prisma.guest.delete({ where: { id: guestId } });
   }
   

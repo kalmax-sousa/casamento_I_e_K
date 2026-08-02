@@ -1,21 +1,64 @@
 import type { Request, Response } from 'express';
 import { AdminGuestService } from '../services/AdminGuestService.js';
+import { prisma } from '../config/prisma.js';
 
 const adminService = new AdminGuestService();
 
 export class AdminGuestController {
   async createFamily(req: Request, res: Response) {
     try {
-      const { familyName, guestNames } = req.body;
+      const { familyName, guestName } = req.body;
       
-      if (!familyName || !Array.isArray(guestNames) || guestNames.length === 0) {
-        return res.status(400).json({ error: 'Nome da família e array de convidados são obrigatórios.' });
+      if (!familyName || guestName) {
+        return res.status(400).json({ error: 'Nome da família e convidado são obrigatórios.' });
       }
 
-      const family = await adminService.createFamilyWithGuests(familyName, guestNames);
+      const family = await adminService.createFamilyWithGuests(familyName, guestName);
       return res.status(201).json(family);
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao criar família.' });
+    }
+  }
+  
+  async createGuestWithFamily(req: Request, res: Response) {
+    try {
+      const { familyName, guestName } = req.body;
+      
+      // CORREÇÃO 1: Faltava o "!" no guestName
+      if (!familyName || !guestName) {
+        return res.status(400).json({ error: 'Nome da família e convidado são obrigatórios.' });
+      }
+      
+      // CORREÇÃO 2 e 3: Adicionado o "await" e trocado para "findFirst"
+      const existingFamily = await prisma.family.findFirst({ 
+        where: { name: familyName } 
+      });
+      
+      if (!existingFamily) {
+        const newFamily = await prisma.family.create({
+          data: {
+            name: familyName,
+            guests: {
+              create: { name: guestName },
+            },
+          },
+          include: { guests: true },
+        });
+
+        return res.status(201).json(newFamily);
+      } else {
+        const guest = await prisma.guest.create({
+          data: {
+            name: guestName, 
+            familyId: existingFamily.id, // Agora o TypeScript reconhece o ID perfeitamente!
+          },
+        });
+        
+        return res.status(201).json(guest);
+      }
+    } catch (error) {
+      console.error(error); // Sempre bom logar o erro para ajudar a debugar depois!
+      return res.status(500).json({ error: 'Erro ao criar família/convidado.' });
     }
   }
 
@@ -82,9 +125,8 @@ export class AdminGuestController {
       const { id } = req.params;
 
       if (!id || typeof id !== 'string') {
-        return res.status(400).json({ error: 'O ID da família é obrigatório e deve ser um texto.' });
-      }
-
+      return res.status(400).json({ error: 'O ID do convidado é obrigatório e deve ser um texto.' });
+    }
       await adminService.deleteFamily(id);
       return res.status(204).send();
     } catch (error) {

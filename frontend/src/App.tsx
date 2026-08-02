@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
-import { RSVP } from './components/RSPV';
+import { RSVP } from './pages/RSPV';
 import type { JSX } from 'react/jsx-runtime';
-import { AdminDashboard } from './pages/admin/Dashboard';
+import { Dashboard } from './pages/admin/Dashboard';
 import { AdminLogin } from './pages/admin/Login';
 import { Home } from './pages/Home';
-import { GiftList } from './pages/GiftList';
 import { AdminGifts } from './pages/admin/AdminGifts';
+import { GiftList } from './pages/GiftList';
+import { AdminGuests } from './pages/admin/AdminGuests';
 
 // Componentes provisórios (Placeholders) para as páginas
 const Info = () => <div>Informações (Cardápio, Vestimenta)</div>;
@@ -36,10 +37,19 @@ export default function App() {
         <Route path="/admin/login" element={<AdminLogin />} />
         {/* Rota Administrativa (Fora do layout principal para não ter o menu dos convidados) */}
         <Route 
-          path="/admin/dashboard"  
+          path="/admin/"  
           element={
             <PrivateRoute>
-              <AdminDashboard />
+              <Dashboard />
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/admin/convidados" 
+          element={
+            <PrivateRoute>
+              <AdminGuests />
             </PrivateRoute>
           } 
         />

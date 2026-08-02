@@ -1,4 +1,5 @@
 import { Link, Outlet } from 'react-router-dom';
+import Monograma from '../assets/monograma.svg?react';
 
 export function MainLayout() {
   return (
@@ -7,14 +8,14 @@ export function MainLayout() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="text-2xl font-serif font-bold text-gray-800">
-            I & K
+            <Monograma className="w-8 h-8"/>
           </Link>
           
           <nav className="hidden md:flex gap-6 font-medium text-sm text-gray-600">
             <Link to="/" className="hover:text-black">Início</Link>
-            <Link to="/infos" className="hover:text-black">Informações</Link>
+            {/*<Link to="/infos" className="hover:text-black">Informações</Link>*/}
             <Link to="/presentes" className="hover:text-black">Lista de Presentes</Link>
-            <Link to="/fotos" className="hover:text-black">Desafio de Fotos</Link>
+            {/*<Link to="/fotos" className="hover:text-black">Desafio de Fotos</Link>*/}
             <Link to="/rsvp" className="hover:text-black border-b-2 border-transparent hover:border-black">
               Confirmar Presença
             </Link>
@@ -28,7 +29,7 @@ export function MainLayout() {
       </main>
 
       {/* Footer simples */}
-      <footer className="text-center py-8 text-sm text-gray-400">
+      <footer className="bg-paper text-center py-8 text-sm text-gray-400">
         Feito com ❤️ pelos noivos.
       </footer>
     </div>

@@ -6,6 +6,6 @@ const giftController = new GiftController();
 
 router.get('/', giftController.listPublicGifts);
 router.post('/checkout', giftController.createCheckoutSession);
-router.post('/pledge', giftController.registerExternalPurchase);
+router.post('/manual', giftController.registerManualPurchase);
 
 export default router;

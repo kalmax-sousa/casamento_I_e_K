@@ -6,13 +6,14 @@ const guestService = new GuestService();
 export class GuestController {
   async search(req: Request, res: Response) {
     try {
-      const { name } = req.query;
+      // 1. Pegamos o nome. Se vier undefined (ou seja, não mandou o ?name=), forçamos virar uma string vazia
+      const name = (req.query.name as string) || '';
 
-      if (!name || typeof name !== 'string') {
-        return res.status(400).json({ error: 'Nome é obrigatório para a busca' });
-      }
-
+      // 2. Removemos aquele IF bloqueador. Agora o nome pode ser vazio tranquilamente.
+      
+      // 3. O Service vai fazer a busca. Se name for '', o Prisma retorna todo mundo.
       const guests = await guestService.searchGuestsByName(name);
+      
       return res.json(guests);
     } catch (error) {
       console.error('Erro na busca de convidados:', error);

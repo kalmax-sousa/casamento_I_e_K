@@ -12,7 +12,7 @@ export function AdminLogin() {
     setError('');
 
     try {
-      const response = await fetch('https://casamento-i-e-k.onrender.com/api/auth/login', {
+      const response = await fetch(import.meta.env.VITE_API_URL + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -23,7 +23,7 @@ export function AdminLogin() {
       if (response.ok) {
         // Salva o token e redireciona para o painel
         localStorage.setItem('adminToken', data.token);
-        navigate('/admin/dashboard');
+        navigate('/admin/');
       } else {
         setError(data.error || 'Erro ao fazer login');
       }

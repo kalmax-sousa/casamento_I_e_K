@@ -14,10 +14,16 @@ router.post('/families', adminGuestController.createFamily);
 router.get('/families', adminGuestController.listFamilies);
 router.delete('/families/:id', adminGuestController.deleteFamily);
 
+router.post('/guestFamily', adminGuestController.createGuestWithFamily);
 router.post('/families/:familyId/guests', adminGuestController.addGuest);
 router.patch('/guests/:id', adminGuestController.updateGuest);
 router.delete('/guests/:id', adminGuestController.deleteGuest);
 
-router.post('/gifts', giftController.createGift);
+router.get('/gifts', authMiddleware, giftController.listAllGifts);
+router.post('/gifts', authMiddleware, giftController.createGift);
+router.put('/gifts/:id', giftController.updateGift);
+router.delete('/gifts/:id', giftController.deleteGift);
+
+router.get('/purchases', giftController.listPurchases);
 
 export default router;

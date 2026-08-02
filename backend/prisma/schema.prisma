@@ -21,7 +21,7 @@ model AdminUser {
 // ==========================================
 model Family {
   id        String   @id @default(uuid())
-  name      String // Ex: "Família Silva" ou "João e Maria"
+  name      String   @unique
   guests    Guest[]
   createdAt DateTime @default(now())
 }
@@ -43,16 +43,21 @@ model Guest {
 // ==========================================
 // LISTA DE PRESENTES (Estilo E-commerce)
 // ==========================================
+// ==========================================
+// LISTA DE PRESENTES (Estilo E-commerce)
+// ==========================================
 model Gift {
   id          String  @id @default(uuid())
-  name        String // Nome do presente (ex: "Jogo de Panelas")
+  name        String
   description String?
-  photoUrl    String? // Foto do presente
-  price       Float // Valor unitário (Obrigatório para o Stripe)
+  photoUrl    String
+  price       Float
 
-  // Controle de estoque simples
-  totalQuantity     Int @default(1) // Quantidade que vocês querem (ex: 4 toalhas)
-  purchasedQuantity Int @default(0) // Quantidade já comprada
+  specifications String?
+  storeLinks     String[]
+
+  totalQuantity     Int @default(1)
+  purchasedQuantity Int @default(0)
 
   purchases Purchase[]
   createdAt DateTime   @default(now())
@@ -65,15 +70,18 @@ model Purchase {
   giftId String
   gift   Gift   @relation(fields: [giftId], references: [id])
 
-  buyerName String // Nome de quem comprou (vai vir do Stripe)
-  guestId   String? // Opcional: Se o convidado se identificar antes de comprar
+  buyerName String
+  guestId   String?
   guest     Guest?  @relation(fields: [guestId], references: [id])
 
-  quantityBought Int   @default(1)
-  amountPaid     Float // Valor total pago na transação
+  message       String?
+  paymentMethod String  @default("STRIPE")
 
-  status        String  @default("PENDING") // PENDING, PAID, FAILED
-  stripeSession String? // ID do checkout session do Stripe para o Webhook
+  quantityBought Int   @default(1)
+  amountPaid     Float
+
+  status        String  @default("PENDING")
+  stripeSession String?
 
   createdAt DateTime @default(now())
 }

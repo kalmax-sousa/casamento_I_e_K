@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import fotoCasal from '../assets/ZVE00227.jpg';
+import Nome from '../assets/nom.svg?react';
+import Maos from '../assets/ZVE00339.jpg'
 
 export function Home() {
   // Configuração do Contador (Ajuste para a data real)
@@ -45,7 +47,7 @@ export function Home() {
   );
 
   return (
-    <div className="bg-paper min-h-screen text-textMain font-serif font-medium selection:bg-olive selection:text-white pb-20">
+    <div className="bg-paper min-h-screen text-textMain font-serif font-medium selection:bg-olive selection:text-white">
       
       {/* 1. HERO SECTION (Foto com Gradiente Escuro na base) */}
       <section className="relative w-full h-[75vh] flex flex-col justify-end items-center text-white text-center">
@@ -59,6 +61,8 @@ export function Home() {
 
         <div className="relative z-20 pb-16 flex flex-col items-center">
           <p className="tracking-[0.2em] text-xs uppercase mb-2 opacity-90">Vamos nos casar</p>
+
+          <Nome className="w-64 h-9 md:w-96 md:h-16 text-white" />
           
           <p className="tracking-[0.2em] text-sm mt-4">17.10.2026</p>
           
@@ -105,7 +109,13 @@ export function Home() {
           </svg>
           <h2 className="text-2xl italic mb-4">Nossa História</h2>
           <p className="text-sm leading-relaxed text-gray-600 px-4">
-            Texto da história
+            Há 8 anos, nossos caminhos se cruzaram e nossa história de amor começou.
+            Éramos adolescentes, cheios de sonhos, aprendizados e muitas descobertas pela frente. Crescemos juntos, enfrentamos desafios, comemoramos conquistas e aprendemos que o amor vai muito além dos sentimentos dos primeiros dias.
+            Descobrimos que amar é escolher um ao outro todos os dias. É ter paciência, parceria, respeito e a vontade de fazer dar certo, mesmo quando a vida apresenta obstáculos.
+            Foi esse amor que nos trouxe até aqui.
+            Agora, chegou o momento de dar o passo mais importante da nossa caminhada: unir nossas vidas e iniciar oficialmente a nossa família.
+            Nada faria esse dia mais especial do que celebrar esse momento ao lado das pessoas que amamos.
+            Esperamos vocês para compartilhar nossa alegria, criar novas lembranças e comemorar o início deste novo capítulo da nossa história.
           </p>
         </div>
         
@@ -114,6 +124,20 @@ export function Home() {
           <span className="h-[1px] w-12 bg-[#e2dec6]" />
           <span>⋈</span>
           <span className="h-[1px] w-12 bg-[#e2dec6]" />
+        </div>
+
+        <div className="w-screen ml-[calc(50%-50vw)] relative flex mb-16 mt-8">
+          
+          <div className="absolute top-0 left-0 w-full z-10">
+            <TornPaperEdge />
+          </div>
+
+          <img src={Maos} alt="Maos" className="w-full block object-cover" />
+
+          <div className="absolute bottom-0 left-0 w-full z-10 transform rotate-180">
+            <TornPaperEdge />
+          </div>
+          
         </div>
 
         {/* 4. LISTA DE PRESENTES */}
@@ -148,7 +172,7 @@ export function Home() {
             <polyline points="22 4 12 14.01 9 11.01" />
           </svg>
           <h3 className="text-2xl italic mb-2">Presença</h3>
-          <p className="text-xs tracking-widest uppercase text-gray-500 mb-6">Por favor, confirme até 01.10.2026</p>
+          <p className="text-xs tracking-widest uppercase text-gray-500 mb-6">Por favor, confirme até 17.10.2026</p>
           <Link 
             to="/rsvp" 
             className="inline-block bg-olive text-white tracking-widest text-xs uppercase py-3 px-8 rounded-full transition-transform hover:scale-105 active:scale-95 shadow-sm"
