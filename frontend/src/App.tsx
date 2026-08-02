@@ -27,6 +27,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="infos" element={<Info />} />
           <Route path="presentes" element={<GiftList />} />
+          <Route path="presentes/:category" element={<GiftList />} />
           <Route path="fotos" element={<PhotoChallenge />} />
           
           {/* O componente RSVP que fizemos entra aqui */}
