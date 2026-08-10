@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import qrcodeImg from '../assets/qrcode-pix.png';
 
 interface Gift {
   id: string;
@@ -133,10 +134,10 @@ export function GiftCard({ gift, onGiftUpdated }: { gift: Gift, onGiftUpdated: (
                 <button onClick={() => handleMethodSelect('PIX_MANUAL')} className="w-full border-2 border-olive text-olive font-semibold py-4 rounded transition-colors hover:bg-olive hover:text-white">
                   Fazer um PIX
                 </button>
-                <button onClick={() => handleMethodSelect('CARD')} className="w-full bg-gray-100 text-gray-700 font-semibold py-4 rounded transition-colors hover:bg-gray-200">
+                <button onClick={() => handleMethodSelect('CARD')} className="w-full border-2 border-olive text-olive font-semibold py-4 rounded transition-colors hover:bg-olive hover:text-white">
                   Pagar com Cartão
                 </button>
-                <button onClick={() => handleMethodSelect('EXTERNAL')} className="w-full text-gray-500 text-sm py-2 underline mt-2 hover:text-gray-800">
+                <button onClick={() => handleMethodSelect('EXTERNAL')} className="w-full border-2 border-olive text-olive font-semibold py-4 rounded transition-colors hover:bg-olive hover:text-white">
                   Prefiro comprar na loja e entregar
                 </button>
               </div>
@@ -167,7 +168,7 @@ export function GiftCard({ gift, onGiftUpdated }: { gift: Gift, onGiftUpdated: (
                 {method === 'PIX_MANUAL' && (
                   <div className="bg-gray-50 p-4 rounded-lg text-center mb-6 border border-gray-200">
                     <p className="text-sm font-semibold mb-2">Valor: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(gift.price)}</p>
-                    <img src="" alt="QR Code PIX" className="w-40 h-40 mx-auto mb-4 bg-white p-2 rounded shadow-sm" />
+                    <img src={qrcodeImg} alt="QR Code PIX" className="w-40 h-40 mx-auto mb-4 bg-white p-2 rounded shadow-sm" />
                     <button onClick={copyPixKey} className="text-sm text-olive underline mb-2">Copiar Chave PIX</button>
                     <p className="text-xs text-gray-500 mt-2">Faça o pagamento no seu banco e depois clique no botão abaixo para confirmar.</p>
                   </div>
