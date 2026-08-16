@@ -29,7 +29,7 @@ export function MainLayout() {
       </main>
 
       {/* Footer simples */}
-      <footer className="bg-paper text-center py-8 text-sm text-gray-400">
+      <footer className="bg-paper text-center pb-8 text-sm text-gray-400">
         Feito com ❤️ pelos noivos.
       </footer>
     </div>

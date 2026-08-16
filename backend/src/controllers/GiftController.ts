@@ -66,7 +66,7 @@ export class GiftController {
           message: message || '',
           paymentMethod: 'STRIPE'
         },
-        success_url: `${baseUrl}/presentes?pagamento=sucesso`,
+        success_url: `${baseUrl}/presentes?pagamento=sucesso&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/presentes`,
       });
 
@@ -76,6 +76,61 @@ export class GiftController {
       return res.status(500).json({ error: 'Erro ao gerar pagamento.' });
     }
   }
+
+  // GiftController.ts
+async verifyCheckoutSession(req: Request, res: Response) {
+  const { sessionId } = req.body;
+
+  if (!sessionId) return res.status(400).json({ error: 'Session ID é obrigatório' });
+
+  try {
+    // 1. Busca a sessão direto no Stripe
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    // 2. Verifica se a pessoa pagou mesmo
+    if (session.payment_status === 'paid' && session.metadata) {
+      
+      // 3. Verifica se já não demos baixa nessa compra (para evitar duplicidade se a pessoa atualizar a página)
+      const existingPurchase = await prisma.purchase.findFirst({
+        where: { stripeSession: session.id }
+      });
+
+      if (!existingPurchase) {
+        const { giftId, quantityBought, buyerName, message } = session.metadata;
+
+        // Cria a compra
+        await prisma.purchase.create({
+          data: {
+            giftId: giftId ?? '',
+            buyerName: buyerName || 'Não informado',
+            message: message || 'Nenhuma mensagem',
+            paymentMethod: 'STRIPE',
+            quantityBought: parseInt(quantityBought || '1'),
+            amountPaid: (session.amount_total || 0) / 100,
+            status: 'PAID',
+            stripeSession: session.id
+          }
+        });
+
+        // Dá a baixa no estoque
+        await prisma.gift.update({
+          where: { id: giftId ?? '' },
+          data: { purchasedQuantity: { increment: parseInt(quantityBought || '1') } }
+        });
+
+        return res.json({ success: true, message: 'Baixa concluída com sucesso!' });
+      } else {
+        return res.json({ success: true, message: 'Essa compra já havia sido processada.' });
+      }
+    }
+
+    return res.status(400).json({ error: 'Pagamento ainda não foi concluído.' });
+
+  } catch (error) {
+    console.error('Erro ao verificar sessão:', error);
+    return res.status(500).json({ error: 'Erro interno ao verificar pagamento.' });
+  }
+}
 
   async registerManualPurchase(req: Request, res: Response) {
     try {

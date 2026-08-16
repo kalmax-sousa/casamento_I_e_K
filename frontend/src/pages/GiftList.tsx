@@ -33,11 +33,38 @@ export function GiftList() {
       });
   };
 
- useEffect(() => {
-    if (window.location.search.includes('pagamento=sucesso')) {
+// GiftList.tsx
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const isSuccess = params.get('pagamento') === 'sucesso';
+    const sessionId = params.get('session_id');
+
+    if (isSuccess && sessionId) {
+      // 1. Limpa a URL para o usuário não ficar vendo aqueles códigos feios
       window.history.replaceState({}, document.title, window.location.pathname);
+      setIsLoading(true);
+
+      // 2. Manda o backend verificar e dar baixa
+      fetch(`${import.meta.env.VITE_API_URL}/api/gifts/verify-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert('Presente confirmado com sucesso! Muito obrigado pelo carinho! ❤️');
+        // 3. Agora sim, busca a lista de presentes atualizada
+        fetchGifts();
+      })
+      .catch(err => {
+        console.error('Erro ao verificar pagamento', err);
+        fetchGifts(); // Carrega os presentes mesmo se der erro na tela
+      });
+
+    } else {
+      // Carregamento normal se não for um retorno de compra
+      fetchGifts();
     }
-    fetchGifts();
   }, []);
 
   return (
@@ -50,11 +77,6 @@ export function GiftList() {
           <p className="text-sm tracking-widest uppercase text-gray-500 max-w-lg mx-auto leading-relaxed">
             Nossa casa já está tomando forma, mas qualquer ajuda para completá-la é muito bem-vinda. Agradecemos o carinho!
           </p>
-          <div className="flex items-center justify-center gap-4 mt-8 text-[#c4bca2]">
-            <span className="h-[1px] w-12 bg-[#e2dec6]" />
-            <span>⋈</span>
-            <span className="h-[1px] w-12 bg-[#e2dec6]" />
-          </div>
         </div>
 
         {/* Grid de Presentes */}
@@ -63,7 +85,7 @@ export function GiftList() {
         ) : gifts.length === 0 ? (
           <div className="text-center py-20 text-gray-500 italic">Nenhum presente disponível no momento.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-8">
             {gifts.map(gift => (
               <GiftCard
                 key={gift.id} 

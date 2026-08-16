@@ -104,7 +104,7 @@ export function GiftCard({ gift, onGiftUpdated }: { gift: Gift, onGiftUpdated: (
         </div>
 
         <div className="p-6 flex flex-col flex-grow text-center">
-          <h3 className="text-xl italic text-textMain mb-2">{gift.name}</h3>
+          <h3 className="text-xl italic text-textMain mb-2 text-wrap">{gift.name}</h3>
           <p className="text-lg font-semibold text-textMain mb-4">
             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(gift.price)}
           </p>
@@ -112,7 +112,7 @@ export function GiftCard({ gift, onGiftUpdated }: { gift: Gift, onGiftUpdated: (
           {!isSoldOut && (
             <button 
               onClick={handleOpenModal}
-              className="mt-auto w-full bg-olive text-white tracking-widest text-xs uppercase py-3 px-4 rounded-full transition-colors hover:bg-opacity-90"
+              className="mt-auto w-full bg-olive text-white tracking-widest text-xs uppercase py-3 px-3 rounded-full transition-colors hover:bg-opacity-90"
             >
               Presentear
             </button>
